@@ -37,7 +37,6 @@ def score_connection(conn: psutil._common.sconn) -> float:
     """
     score = 0.0
 
-    # Remote address check
     if conn.raddr:
         ip = conn.raddr.ip if hasattr(conn.raddr, "ip") else conn.raddr[0]
         try:
@@ -49,11 +48,9 @@ def score_connection(conn: psutil._common.sconn) -> float:
         except OSError:
             score += 10
 
-    # Status
     if conn.status not in ("ESTABLISHED", "LISTEN"):
         score += 10
 
-    # Port-based heuristics
     try:
         dport = conn.raddr.port
     except Exception:
@@ -64,7 +61,6 @@ def score_connection(conn: psutil._common.sconn) -> float:
     if dport in (4444, 1337, 5555):
         score += 30
 
-    # Process
     pname = ""
     if conn.pid:
         try:
@@ -119,7 +115,6 @@ def get_active_connections() -> list:
 def score_packet(src_ip: str, dst_ip: str, sport, dport, proto: str) -> float:
     score = 0.0
 
-    # External IP?
     for ip in (src_ip, dst_ip):
         if not ip:
             continue
@@ -135,7 +130,6 @@ def score_packet(src_ip: str, dst_ip: str, sport, dport, proto: str) -> float:
         except OSError:
             score += 5
 
-    # Port heuristics
     risky_ports = {22, 23, 445, 3389, 5555, 4444}
     if sport in risky_ports or dport in risky_ports:
         score += 30

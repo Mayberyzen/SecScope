@@ -17,11 +17,7 @@ try:
     import requests
 except ImportError:
     requests = None
-
-
-# ------------------------------------------------------------
-# Helper: run a system command safely
-# ------------------------------------------------------------
+    
 def _run_command(cmd: list) -> str:
     try:
         out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, text=True, timeout=10)
@@ -29,10 +25,6 @@ def _run_command(cmd: list) -> str:
     except Exception:
         return ""
 
-
-# ------------------------------------------------------------
-# Firewall Status
-# ------------------------------------------------------------
 def check_firewall_status() -> str:
     system = platform.system().lower()
 
@@ -55,9 +47,6 @@ def check_firewall_status() -> str:
     return "Unknown"
 
 
-# ------------------------------------------------------------
-# Defender Status
-# ------------------------------------------------------------
 def check_defender_status() -> str:
     system = platform.system().lower()
 
@@ -76,10 +65,6 @@ def check_defender_status() -> str:
 
     return "AV status not available (non-Windows)"
 
-
-# ------------------------------------------------------------
-# SmartScreen
-# ------------------------------------------------------------
 def check_smartscreen_status() -> str:
     system = platform.system().lower()
 
@@ -100,10 +85,6 @@ def check_smartscreen_status() -> str:
 
     return "SmartScreen: Not available"
 
-
-# ------------------------------------------------------------
-# Public IP
-# ------------------------------------------------------------
 def get_public_ip() -> str:
     if requests is None:
         return "requests not installed"
@@ -239,10 +220,6 @@ def build_summary(
 
     return "\n".join(lines)
 
-
-# ------------------------------------------------------------
-# Main System Health Scan
-# ------------------------------------------------------------
 def run_system_health_scan() -> dict:
     firewall_status = check_firewall_status()
     defender_status = check_defender_status()

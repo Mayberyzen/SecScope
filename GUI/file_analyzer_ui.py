@@ -102,7 +102,6 @@ class FileUrlAnalyzerTab(QWidget):
         decrypt_btn.clicked.connect(self._decrypt_file)
         self.file_path_edit.editingFinished.connect(self._analyze_file_path)
 
-    # === FILE HANDLING ===
     def _browse_file(self):
         path, _ = QFileDialog.getOpenFileName(self, "Choose a file")
         if path:
@@ -157,7 +156,6 @@ class FileUrlAnalyzerTab(QWidget):
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e))
 
-    # === URL HANDLING ===
     def _analyze_url(self):
         url = self.url_input.text().strip()
         if not url:

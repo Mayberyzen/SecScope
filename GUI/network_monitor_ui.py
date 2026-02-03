@@ -158,8 +158,6 @@ class NetworkMonitorTab(QWidget):
     def _log(self, message: str):
         self.log_panel.appendPlainText(message)
 
-    # -------- Start / Stop logic --------
-
     def start_monitoring(self):
         iface = self.interface_dropdown.currentText().strip()
         if not iface:
@@ -169,7 +167,6 @@ class NetworkMonitorTab(QWidget):
         # Avoid double-start
         self.stop_monitoring()
 
-        # Connection monitor thread
         self.conn_thread = QThread(self)
         self.conn_worker = ConnectionMonitorWorker(interval=3.0)
         self.conn_worker.moveToThread(self.conn_thread)
@@ -193,7 +190,6 @@ class NetworkMonitorTab(QWidget):
         self.sniff_worker.finished.connect(self.sniff_worker.deleteLater)
         self.sniff_thread.finished.connect(self.sniff_thread.deleteLater)
 
-        # Start both
         self.conn_thread.start()
         self.sniff_thread.start()
 
@@ -202,7 +198,6 @@ class NetworkMonitorTab(QWidget):
         self._log(f"[*] Monitoring started on {iface}")
 
     def stop_monitoring(self):
-        # Stop connection monitor
         if self.conn_worker is not None:
             self.conn_worker.stop()
         if self.conn_thread is not None and self.conn_thread.isRunning():
@@ -211,7 +206,6 @@ class NetworkMonitorTab(QWidget):
         self.conn_worker = None
         self.conn_thread = None
 
-        # Stop sniffer
         if self.sniff_worker is not None:
             self.sniff_worker.stop()
         if self.sniff_thread is not None and self.sniff_thread.isRunning():
@@ -222,8 +216,6 @@ class NetworkMonitorTab(QWidget):
 
         self.start_button.setEnabled(True)
         self.stop_button.setEnabled(False)
-
-    # -------- UI update helpers --------
 
     def update_connections_table(self, connections: list):
         self.connections_table.setRowCount(0)
@@ -268,10 +260,8 @@ class NetworkMonitorTab(QWidget):
             risk_item.setForeground(Qt.GlobalColor.darkGreen)
         self.packets_table.setItem(row, 6, risk_item)
 
-        # Auto-scroll to last row
         self.packets_table.scrollToBottom()
 
     def closeEvent(self, event):
-        # Ensure threads stop when closing tab/window
         self.stop_monitoring()
         super().closeEvent(event)

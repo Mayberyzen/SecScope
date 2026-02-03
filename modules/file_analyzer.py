@@ -5,11 +5,6 @@ import base64
 from urllib.parse import urlparse
 from cryptography.fernet import Fernet
 
-
-# =========================
-# FILE HASHING
-# =========================
-
 def compute_hashes(path: str) -> dict:
     hashes = {
         "md5": hashlib.md5(),
@@ -27,10 +22,6 @@ def compute_hashes(path: str) -> dict:
 
     return {name: h.hexdigest() for name, h in hashes.items()}
 
-
-# =========================
-# ENTROPY ANALYSIS
-# =========================
 
 def calculate_entropy(path: str) -> float:
     byte_counts = [0] * 256
@@ -64,11 +55,6 @@ def detect_packing(path: str) -> str:
     else:
         return f"Low entropy ({entropy:.2f}) – likely not packed"
 
-
-# =========================
-# URL ANALYSIS
-# =========================
-
 def analyze_url(url: str) -> dict:
     parsed = urlparse(url)
     domain = parsed.netloc or parsed.path
@@ -98,12 +84,6 @@ def analyze_url(url: str) -> dict:
         "suspicious": suspicious,
         "reasons": reasons,
     }
-
-
-# =========================
-# FILE ENCRYPTION / DECRYPTION
-# =========================
-
 def _generate_key(password: str) -> bytes:
     digest = hashlib.sha256(password.encode()).digest()
     return base64.urlsafe_b64encode(digest)
